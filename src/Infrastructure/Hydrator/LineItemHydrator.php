@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Billing\Infrastructure\Hydrator;
 
+use Billing\Domain\Aggregate\Item;
 use Billing\Domain\Entity\LineItem;
 
 /**
@@ -25,10 +26,9 @@ class LineItemHydrator extends BaseHydrator
 
     public function hydrate(array $data, $classNameOrObject)
     {
-        // TODO: implement
-        throw new \InvalidArgumentException('Method ' . __METHOD__ . ' is not implemented yet.');
+        $data['item'] = $this->itemHydrator->hydrate($data['item'], Item::class);
 
-        return $object;
+        return parent::hydrate($data, $classNameOrObject);
     }
 
     /**
@@ -39,9 +39,9 @@ class LineItemHydrator extends BaseHydrator
      */
     public function extract($object)
     {
-        // TODO: implement
-        throw new \InvalidArgumentException('Method ' . __METHOD__ . ' is not implemented yet.');
-
-        return [];
+        return [
+            'item' => $this->itemHydrator->extract($object->item()),
+            'quantity' => $object->quantity(),
+        ];
     }
 }
