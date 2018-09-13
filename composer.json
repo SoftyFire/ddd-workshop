@@ -7,7 +7,9 @@
     "ramsey/uuid": "*",
     "moneyphp/money": "*",
     "ocramius/generated-hydrator": "*",
-    "zendframework/zend-hydrator": "*"
+    "zendframework/zend-hydrator": "*",
+    "doctrine/orm": "^2.6.1",
+    "ramsey/uuid-doctrine": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "*"
