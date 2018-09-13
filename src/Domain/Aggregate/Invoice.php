@@ -29,17 +29,9 @@ final class Invoice
     {
     }
 
-    /**
-     * @return UuidInterface
-     */
-    public function id(): UuidInterface
-    {
-        return $this->id;
-    }
-
     public static function new(): self
     {
-        $invoice = new Invoice();
+        $invoice = new self();
         $invoice->id = Uuid::uuid4();
 
         return $invoice;
@@ -47,16 +39,21 @@ final class Invoice
 
     public function addLine(LineItem $lineItem): self
     {
-        $lineItem->setInvoice($this);
         $this->lineItems[] = $lineItem;
+        $lineItem->setInvoice($this);
 
         return $this;
+    }
+
+    public function id(): UuidInterface
+    {
+        return $this->id;
     }
 
     /**
      * @return LineItem[]
      */
-    public function getLines()
+    public function lines(): array
     {
         return $this->lineItems;
     }

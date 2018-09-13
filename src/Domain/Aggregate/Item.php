@@ -34,7 +34,7 @@ final class Item
     {
     }
 
-    public static function new(string $name, Money $price): Item
+    public static function new(string $name, Money $price): self
     {
         $item = new self();
         $item->id = Uuid::uuid4();
@@ -42,29 +42,5 @@ final class Item
         $item->price = $price;
 
         return $item;
-    }
-
-    /**
-     * @return UuidInterface
-     */
-    public function id(): UuidInterface
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function name(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return Money
-     */
-    public function price(): Money
-    {
-        return $this->price;
     }
 }

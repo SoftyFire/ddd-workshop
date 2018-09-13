@@ -8,11 +8,15 @@
 
     /** @var Billing\Infrastructure\DI\Container $container */
     $container = require '../config/container.php';
-    $invoiceRepository = $container->get(\Billing\Domain\Repository\InvoiceRepository::class);
 
+    $invoiceRepository = $container->get(\Billing\Domain\Repository\InvoiceRepository::class);
     $invoice = \Billing\Domain\Aggregate\Invoice::new();
     $invoice->addLine(\Billing\Domain\Entity\LineItem::forItem(
-        \Billing\Domain\Aggregate\Item::new('Test item', new Money\Money(10000, new \Money\Currency('USD')))
+        \Billing\Domain\Aggregate\Item::new(
+            'Test item',
+            new \Money\Money(10000, new \Money\Currency('USD'))
+        ),
+        1
     ));
     $invoiceRepository->persist($invoice);
 

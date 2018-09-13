@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Billing\Infrastructure\Hydrator;
 
 use Billing\Domain\Aggregate\Invoice;
+use Billing\Domain\Entity\LineItem;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Class InvoiceHydrator
@@ -25,10 +27,12 @@ class InvoiceHydrator extends BaseHydrator
 
     public function hydrate(array $data, $classNameOrObject)
     {
-        // TODO: hydrate object
-        throw new \InvalidArgumentException('Method ' . __METHOD__ . ' is not implemented yet.');
+        $data['id'] = Uuid::fromString($data['id']);
+        $data['lineItems'] = array_map(function ($row) {
+            return $this->lineItemHydrator->hydrate($row, LineItem::class);
+        }, $data['lineItems']);
 
-        return $object;
+        return parent::hydrate($data, $classNameOrObject);
     }
 
     /**
@@ -39,10 +43,11 @@ class InvoiceHydrator extends BaseHydrator
      */
     public function extract($object)
     {
-        throw new \InvalidArgumentException('Method ' . __METHOD__ . ' is not implemented yet.');
-
         return [
-            // TODO: extract data from object
+            'id' => $object->id()->toString(),
+            'lineItems' => array_map(function (LineItem $lineItem) {
+                 return $this->lineItemHydrator->extract($lineItem);
+            }, $object->lines())
         ];
     }
 }

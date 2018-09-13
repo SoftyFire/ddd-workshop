@@ -33,64 +33,30 @@ final class LineItem
      */
     private $invoice;
 
-    /**
-     * @return Invoice
-     */
-    public function getInvoice(): Invoice
-    {
-        return $this->invoice;
-    }
-
     private function __construct()
     {
     }
 
-    public static function forItem(Item $item, float $quantity = null): LineItem
+    public static function forItem(Item $item, float $quantity): self
     {
         $lineItem = new self();
         $lineItem->id = Uuid::uuid4();
         $lineItem->item = $item;
-        $lineItem->quantity = $quantity ?? 1;
+        $lineItem->quantity = $quantity;
 
         return $lineItem;
     }
 
     /**
-     * @return UuidInterface
-     */
-    public function id(): UuidInterface
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return Item
-     */
-    public function item(): Item
-    {
-        return $this->item;
-    }
-
-    /**
-     * @return float
-     */
-    public function quantity(): float
-    {
-        return $this->quantity;
-    }
-
-    /**
      * @param Invoice $invoice
-     * @return LineItem
-     * @throws \Exception
+     * @throws \Exception when invoice is already set
      */
-    public function setInvoice(Invoice $invoice): self
+    public function setInvoice(Invoice $invoice): void
     {
         if ($this->invoice !== null) {
-            throw new \Exception('Invoice is already attached');
+            throw new \Exception('Invoice is already set. Can not reassign.');
         }
-        $this->invoice = $invoice;
 
-        return $this;
+        $this->invoice = $invoice;
     }
 }
