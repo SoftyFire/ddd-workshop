@@ -23,16 +23,28 @@ class DoctrineCustomerRepository implements CustomerRepository
 
     public function get(UuidInterface $uuid): Customer
     {
-        throw new \BadMethodCallException(sprintf('Method "%s" is not implemented yet', __METHOD__));
+        $customer = $this->objectManager->find(Customer::class, $uuid->toString());
+
+        if (!$customer instanceof Customer) {
+            throw new \OutOfBoundsException(sprintf(
+                'Customer "%s" does not exist',
+                $uuid->toString()
+            ));
+        }
+
+        return $customer;
     }
 
     public function persist(Customer $invoice) : void
     {
-        throw new \BadMethodCallException(sprintf('Method "%s" is not implemented yet', __METHOD__));
+        $this->objectManager->persist($invoice);
+        $this->objectManager->flush();
     }
 
     public function findByEmail(EmailAddress $email): ?Customer
     {
-        throw new \BadMethodCallException(sprintf('Method "%s" is not implemented yet', __METHOD__));
+        return $this->objectManager->getRepository(Customer::class)->findOneBy([
+            'email' => $email->toString()
+        ]);
     }
 }

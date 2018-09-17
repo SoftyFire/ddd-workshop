@@ -17,11 +17,25 @@ final class EmailAddress
 
     public static function fromString(string $address): self
     {
-        throw new \BadMethodCallException(sprintf('Method "%s" is not implemented yet', __METHOD__));
+        $email = new self;
+        $email->ensureIsValid($address);
+        $email->email = $address;
+
+        return $email;
     }
 
     public function toString(): string
     {
         return $this->email;
+    }
+
+    private function ensureIsValid(string $email): void
+    {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            throw new \OutOfBoundsException(sprintf(
+                'Email address %s is not valid',
+                $email
+            ));
+        }
     }
 }

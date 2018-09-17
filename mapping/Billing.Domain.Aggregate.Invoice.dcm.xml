@@ -15,5 +15,9 @@
                 <cascade-all/>
             </cascade>
         </one-to-many>
+
+        <many-to-one field="customer" target-entity="Billing\Domain\Aggregate\Customer">
+            <join-column name="customer_id" nullable="false" />
+        </many-to-one>
     </entity>
 </doctrine-mapping>
