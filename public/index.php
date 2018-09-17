@@ -24,6 +24,10 @@
 
     $foo = $invoiceRepository->get($invoice->id());
 
+    $eventHandler = $container->get(\Billing\Infrastructure\Event\DomainEventHandler::class);
+    $events = $invoice->releaseEvents();
+    $eventHandler->handleAll($events);
+
     /** @noinspection ForgottenDebugOutputInspection */
-    var_dump($foo);
+    var_dump($events);
 })();

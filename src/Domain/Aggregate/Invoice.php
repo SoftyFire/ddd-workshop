@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Billing\Domain\Aggregate;
 
 use Billing\Domain\Entity\LineItem;
+use Billing\Domain\Event\InvoiceWasCreatedEvent;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
@@ -15,6 +16,8 @@ use Ramsey\Uuid\UuidInterface;
  */
 final class Invoice
 {
+    use EventsAwareTrait;
+
     /**
      * @var UuidInterface
      */
@@ -46,6 +49,7 @@ final class Invoice
         $invoice = new Invoice();
         $invoice->id = Uuid::uuid4();
         $invoice->customer = $customer;
+        $invoice->recordThat(InvoiceWasCreatedEvent::occurred($invoice));
 
         return $invoice;
     }

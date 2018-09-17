@@ -1,9 +1,25 @@
-<?php
+<?php /** @noinspection ForgottenDebugOutputInspection */
 
 use Billing\Infrastructure\DI\Container;
 
 $definitions = [
 //    \Billing\Domain\Repository\InvoiceRepository::class => \Billing\Infrastructure\Repository\JsonInvoiceRepository::class,
+
+    \Billing\Infrastructure\Event\DomainEventHandler::class => function (Container $container) {
+        return new \Billing\Infrastructure\Event\DomainEventHandler([
+
+            \Billing\Domain\Event\InvoiceWasCreatedEvent::class => [
+                function (\Billing\Domain\Event\InvoiceWasCreatedEvent $event) {
+                    error_log(sprintf(
+                        ' -> Invoice %s for client "%s" has been created',
+                        $event->getInvoice()->id()->toString(),
+                        $event->getInvoice()->customer()->email()->toString()
+                    ));
+                },
+            ],
+
+        ], $container);
+    },
 
     \Billing\Domain\Repository\InvoiceRepository::class => function (Container $container) {
         return new \Billing\Infrastructure\Repository\DoctrineInvoiceRepository(
