@@ -19,6 +19,10 @@ final class Invoice
      * @var UuidInterface
      */
     private $id;
+    /**
+     * @var Customer
+     */
+    private $customer;
 
     /**
      * @var LineItem[]
@@ -37,10 +41,11 @@ final class Invoice
         return $this->id;
     }
 
-    public static function new(): self
+    public static function new(Customer $customer): self
     {
         $invoice = new Invoice();
         $invoice->id = Uuid::uuid4();
+        $invoice->customer = $customer;
 
         return $invoice;
     }
@@ -59,5 +64,10 @@ final class Invoice
     public function getLines()
     {
         return $this->lineItems;
+    }
+
+    public function customer(): Customer
+    {
+        return $this->customer;
     }
 }

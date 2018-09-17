@@ -11,10 +11,9 @@ $definitions = [
         );
     },
 
-    \Billing\Infrastructure\Repository\JsonInvoiceRepository::class => function (Container $container) {
-        return new \Billing\Infrastructure\Repository\JsonInvoiceRepository(
-            dirname(__DIR__) . '/data/invoices.json',
-            $container->get(\Billing\Infrastructure\Hydrator\InvoiceHydrator::class)
+    \Billing\Domain\Repository\CustomerRepository::class => function (Container $container) {
+        return new \Billing\Infrastructure\Repository\DoctrineCustomerRepository(
+            $container->get(\Doctrine\Common\Persistence\ObjectManager::class)
         );
     },
 
