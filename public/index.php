@@ -11,8 +11,10 @@
     $invoiceRepository = $container->get(\Billing\Domain\Repository\InvoiceRepository::class);
     $customerRepository = $container->get(\Billing\Domain\Repository\CustomerRepository::class);
 
+    $customerExists = $container->get(\Billing\Domain\Query\CustomerExists::class);
     $customer = \Billing\Domain\Aggregate\Customer::new(
-        \Billing\Domain\Value\EmailAddress::fromString('user_' . random_int(10000, 99999) . '@example.com')
+        \Billing\Domain\Value\EmailAddress::fromString('user_' . random_int(10000, 99999) . '@example.com'),
+        $customerExists
     );
     $customerRepository->persist($customer);
 

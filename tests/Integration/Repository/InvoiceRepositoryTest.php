@@ -7,6 +7,7 @@ use Billing\Domain\Entity\LineItem;
 use Billing\Domain\Repository\CustomerRepository;
 use Billing\Domain\Repository\InvoiceRepository;
 use Billing\Domain\Value\EmailAddress;
+use Billing\Tests\Stub\Query\StubCustomerExists;
 
 /**
  * Class InvoiceRepositoryTest
@@ -43,7 +44,7 @@ class InvoiceRepositoryTest extends TestCase
         $customer = $this->customerRepo->findByEmail($email);
 
         if ($customer === null) {
-            $customer = Customer::new($email);
+            $customer = Customer::new($email, new StubCustomerExists(false));
             $this->customerRepo->persist($customer);
         }
 
