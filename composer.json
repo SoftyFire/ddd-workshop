@@ -9,7 +9,9 @@
     "ocramius/generated-hydrator": "*",
     "zendframework/zend-hydrator": "*",
     "doctrine/orm": "^2.6.1",
-    "ramsey/uuid-doctrine": "*"
+    "ramsey/uuid-doctrine": "*",
+    "league/tactician": "*",
+    "guzzlehttp/psr7": "^1.4"
   },
   "require-dev": {
     "phpunit/phpunit": "*"

@@ -5,6 +5,24 @@ use Billing\Infrastructure\DI\Container;
 $definitions = [
 //    \Billing\Domain\Repository\InvoiceRepository::class => \Billing\Infrastructure\Repository\JsonInvoiceRepository::class,
 
+    'http-request-bus' => function (Container $container) {
+        return new \League\Tactician\CommandBus([
+            // How to prepare a response?
+            // How to handle an exceptions?
+            // How to load a command?
+            // How to dispatch events?
+            // How to handle command?
+        ]);
+    },
+
+    \League\Tactician\Handler\CommandHandlerMiddleware::class => function (Container $container) {
+        return new \League\Tactician\Handler\CommandHandlerMiddleware(
+            new \League\Tactician\Handler\CommandNameExtractor\ClassNameExtractor(),
+            new \Billing\Infrastructure\Middleware\NearbyHandlerLocator($container),
+            new \League\Tactician\Handler\MethodNameInflector\HandleInflector()
+        );
+    },
+
     \Billing\Infrastructure\Event\DomainEventHandler::class => function (Container $container) {
         return new \Billing\Infrastructure\Event\DomainEventHandler([
 
