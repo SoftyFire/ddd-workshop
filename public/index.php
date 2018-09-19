@@ -14,7 +14,9 @@
     $customerExists = $container->get(\Billing\Domain\Query\CustomerExists::class);
     $customer = \Billing\Domain\Aggregate\Customer::new(
         \Billing\Domain\Value\EmailAddress::fromString('user_' . random_int(10000, 99999) . '@example.com'),
-        $customerExists
+        $customerExists,
+        new \Billing\Infrastructure\Service\RegisterCustomerAsTaxPayerThroughTaxer(),
+        new \Billing\Infrastructure\Service\RegisterCustomerAsPensionFundPayerThroughTaxer()
     );
     $customerRepository->persist($customer);
 
