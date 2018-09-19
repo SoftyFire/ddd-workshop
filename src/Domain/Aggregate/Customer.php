@@ -3,6 +3,7 @@
 namespace Billing\Domain\Aggregate;
 
 use Billing\Domain\Value\EmailAddress;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 final class Customer
@@ -16,13 +17,18 @@ final class Customer
      */
     private $email;
 
-    private function __construct()
+    private function __construct(UuidInterface $id, EmailAddress $email)
     {
+        $this->id = $id;
+        $this->email = $email;
     }
 
     public static function new(EmailAddress $email): self
     {
-        throw new \BadMethodCallException(sprintf('Method "%s" is not implemented yet', __METHOD__));
+        return new self(
+            Uuid::uuid4(),
+            $email
+        );
     }
 
     /**

@@ -26,6 +26,7 @@ $definitions = [
 
         \Doctrine\DBAL\Types\Type::addType('uuid', Ramsey\Uuid\Doctrine\UuidType::class);
         \Doctrine\DBAL\Types\Type::addType('currency', Billing\Infrastructure\Repository\Doctrine\CurrencyType::class);
+        \Doctrine\DBAL\Types\Type::addType('email', Billing\Infrastructure\Repository\Doctrine\EmailAddressType::class);
 
         return Doctrine\ORM\EntityManager::create(
             [

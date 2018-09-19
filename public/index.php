@@ -9,8 +9,14 @@
     /** @var Billing\Infrastructure\DI\Container $container */
     $container = require '../config/container.php';
     $invoiceRepository = $container->get(\Billing\Domain\Repository\InvoiceRepository::class);
+    $customerRepository = $container->get(\Billing\Domain\Repository\CustomerRepository::class);
 
-    $invoice = \Billing\Domain\Aggregate\Invoice::new();
+    $customer = \Billing\Domain\Aggregate\Customer::new(
+        \Billing\Domain\Value\EmailAddress::fromString('test@example.com')
+    );
+    $customerRepository->persist($customer);
+
+    $invoice = \Billing\Domain\Aggregate\Invoice::new($customer);
     $invoice->addLine(\Billing\Domain\Entity\LineItem::forItem(
         \Billing\Domain\Aggregate\Item::new('Test item', new Money\Money(10000, new \Money\Currency('USD')))
     ));

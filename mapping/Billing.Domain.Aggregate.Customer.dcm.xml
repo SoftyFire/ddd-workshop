@@ -10,6 +10,10 @@
             <custom-id-generator class="Ramsey\Uuid\Doctrine\UuidGenerator"/>
         </id>
 
-	    <!-- TODO: implement -->
+	    <unique-constraints>
+            <unique-constraint columns="email"></unique-constraint>
+        </unique-constraints>
+
+        <field name="email" type="email" />
     </entity>
 </doctrine-mapping>
