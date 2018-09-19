@@ -11,8 +11,16 @@
     $invoiceRepository = $container->get(\Billing\Domain\Repository\InvoiceRepository::class);
     $customerRepository = $container->get(\Billing\Domain\Repository\CustomerRepository::class);
 
+    $customerExists = $container->get(\Billing\Domain\Query\CustomerExists::class);
+
+    \Billing\Domain\Aggregate\Invoice::charge(
+        $container->get(TaxCalculationFactory)
+                  ->forCustomer($invoice->customer)
+    );
+
     $customer = \Billing\Domain\Aggregate\Customer::new(
-        \Billing\Domain\Value\EmailAddress::fromString('test@example.com')
+        \Billing\Domain\Value\EmailAddress::fromString('test@example.com'),
+        $customerExists
     );
     $customerRepository->persist($customer);
 

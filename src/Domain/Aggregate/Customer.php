@@ -2,6 +2,7 @@
 
 namespace Billing\Domain\Aggregate;
 
+use Billing\Domain\Query\CustomerExists;
 use Billing\Domain\Value\EmailAddress;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -23,8 +24,15 @@ final class Customer
         $this->email = $email;
     }
 
-    public static function new(EmailAddress $email): self
+    public static function new(EmailAddress $email, CustomerExists $userExists): self
     {
+        if (!$userExists($email)) {
+            throw new \DomainException(sprintf(
+                'User with address "%s" already exists',
+                $email->toString()
+            ));
+        }
+
         return new self(
             Uuid::uuid4(),
             $email
