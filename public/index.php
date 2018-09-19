@@ -13,13 +13,8 @@
 
     $customerExists = $container->get(\Billing\Domain\Query\CustomerExists::class);
 
-    \Billing\Domain\Aggregate\Invoice::charge(
-        $container->get(TaxCalculationFactory)
-                  ->forCustomer($invoice->customer)
-    );
-
     $customer = \Billing\Domain\Aggregate\Customer::new(
-        \Billing\Domain\Value\EmailAddress::fromString('test@example.com'),
+        \Billing\Domain\Value\EmailAddress::fromString('test' . random_int(1000, 2000) . '@example.com'),
         $customerExists
     );
     $customerRepository->persist($customer);
@@ -29,6 +24,9 @@
         \Billing\Domain\Aggregate\Item::new('Test item', new Money\Money(10000, new \Money\Currency('USD')))
     ));
     $invoiceRepository->persist($invoice);
+
+    $handler = $container->get(\Billing\Infrastructure\Event\ListenerInterface::class);
+    $handler->handleAll($invoice->releaseEvents());
 
     $foo = $invoiceRepository->get($invoice->id());
 

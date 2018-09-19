@@ -5,6 +5,23 @@ use Billing\Infrastructure\DI\Container;
 $definitions = [
 //    \Billing\Domain\Repository\InvoiceRepository::class => \Billing\Infrastructure\Repository\JsonInvoiceRepository::class,
 
+\Billing\Infrastructure\Event\ListenerInterface::class => function (Container $container) {
+    return new \Billing\Infrastructure\Event\DomainEventHandler(
+        [
+            \Billing\Domain\Event\InvoiceWasCreated::class => [
+                function (\Billing\Domain\Event\InvoiceWasCreated $event) {
+                    /** @noinspection ForgottenDebugOutputInspection */
+                    error_log(sprintf(
+                        'Invoice %s was created',
+                        $event->target()->id()->toString()
+                    ));
+                }
+            ]
+        ],
+        $container
+    );
+},
+
     \Billing\Domain\Repository\InvoiceRepository::class => function (Container $container) {
         return new \Billing\Infrastructure\Repository\DoctrineInvoiceRepository(
             $container->get(\Doctrine\Common\Persistence\ObjectManager::class)
