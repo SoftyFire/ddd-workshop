@@ -7,12 +7,27 @@ $definitions = [
 
     'http-request-bus' => function (Container $container) {
         return new \League\Tactician\CommandBus([
-            // How to prepare a response?
-            // How to handle an exceptions?
-            // How to load a command?
-            // How to dispatch events?
-            // How to handle command?
+            $container->get(\Billing\Infrastructure\Middleware\ResponseFormatterMiddleware::class),
+            $container->get(\Billing\Infrastructure\Middleware\ConvertToArrayExceptionHandler::class),
+            $container->get(\Billing\Infrastructure\Middleware\LoadCommandFromRequestMiddleware::class),
+            $container->get(\Billing\Infrastructure\Middleware\EventDispatcherMiddleware::class),
+            $container->get(\League\Tactician\Handler\CommandHandlerMiddleware::class),
         ]);
+    },
+
+    \Billing\Infrastructure\Command\Customer\CreateHandler::class => function (Container $container) {
+        return new \Billing\Infrastructure\Command\Customer\CreateHandler(
+            $container->get(\Billing\Domain\Repository\CustomerRepository::class),
+            $container->get(\Billing\Domain\Query\CustomerExists::class),
+            $container->get(\Billing\Infrastructure\Event\EventStorage::class)
+        );
+    },
+
+    \Billing\Infrastructure\Middleware\EventDispatcherMiddleware::class => function (Container $container) {
+        return new \Billing\Infrastructure\Middleware\EventDispatcherMiddleware(
+            $container->get(\Billing\Infrastructure\Event\EventStorage::class),
+            $container->get(\Billing\Infrastructure\Event\DomainEventHandler::class)
+        );
     },
 
     \League\Tactician\Handler\CommandHandlerMiddleware::class => function (Container $container) {

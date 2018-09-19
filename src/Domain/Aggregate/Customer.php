@@ -2,6 +2,7 @@
 
 namespace Billing\Domain\Aggregate;
 
+use Billing\Domain\Event\CustomerWasCreated;
 use Billing\Domain\Query\CustomerExists;
 use Billing\Domain\Value\EmailAddress;
 use Ramsey\Uuid\Uuid;
@@ -9,6 +10,8 @@ use Ramsey\Uuid\UuidInterface;
 
 final class Customer
 {
+    use EventsAwareTrait;
+
     /**
      * @var UuidInterface
      */
@@ -31,6 +34,7 @@ final class Customer
         $customer = new self();
         $customer->id = Uuid::uuid4();
         $customer->email = $email;
+        $customer->recordThat(CustomerWasCreated::occurred($customer));
 
         return $customer;
     }
